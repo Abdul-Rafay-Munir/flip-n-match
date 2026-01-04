@@ -59,7 +59,27 @@ function App() {
     if (flippedCards.length === 1) {
       const firstCard = cards[flippedCards[0]];
       if (firstCard.value === card.value) {
-        setMatchedCards((prev) => {});
+        setTimeout(() => {
+          setMatchedCards((prev) => [...prev, firstCard.id, card.id]);
+
+          const newMatchedCards = cards.map((c) => {
+            if (c.id === card.id || c.id === firstCard.id) {
+              return { ...c, isMatched: true };
+            } else {
+              return c;
+            }
+          });
+          setCards((prev) =>
+            prev.map((c) => {
+              if (c.id === card.id || c.id === firstCard.id) {
+                return { ...c, isMatched: true };
+              } else {
+                return c;
+              }
+            })
+          );
+          setFlippedCards([]);
+        }, 500);
       } else {
         setTimeout(() => {
           const flippedBackCard = newCards.map((c) => {
