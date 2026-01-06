@@ -51,7 +51,7 @@ function App() {
       card.isFlipped ||
       card.isMatched ||
       isLocked ||
-      isFlipped.length === 2
+      flippedCards.length === 2
     ) {
       return;
     }
