@@ -25,6 +25,9 @@ function App() {
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
+  const [score, setScore] = useState(0);
+  const [moves, setMoves] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
   const initializeGame = () => {
     const finalCards = cardValues.map((value, index) => ({
       id: index,
@@ -33,6 +36,10 @@ function App() {
       isMatched: false,
     }));
     setCards(finalCards);
+    setMoves(0);
+    setScore(0);
+    setFlippedCards([]);
+    setMatchedCards([]);
   };
 
   useEffect(() => {
@@ -40,7 +47,12 @@ function App() {
   }, []);
 
   const handleCardClick = (card) => {
-    if (card.isFlipped || card.isMatched) {
+    if (
+      card.isFlipped ||
+      card.isMatched ||
+      isLocked ||
+      isFlipped.length === 2
+    ) {
       return;
     }
 
@@ -57,10 +69,12 @@ function App() {
     setFlippedCards(newFlippedCards);
 
     if (flippedCards.length === 1) {
+      setIsLocked(true);
       const firstCard = cards[flippedCards[0]];
       if (firstCard.value === card.value) {
         setTimeout(() => {
           setMatchedCards((prev) => [...prev, firstCard.id, card.id]);
+          setScore((prev) => prev + 1);
 
           const newMatchedCards = cards.map((c) => {
             if (c.id === card.id || c.id === firstCard.id) {
@@ -79,6 +93,7 @@ function App() {
             })
           );
           setFlippedCards([]);
+          setIsLocked(false);
         }, 500);
       } else {
         setTimeout(() => {
@@ -91,14 +106,16 @@ function App() {
           });
           setCards(flippedBackCard);
           setFlippedCards([]);
+          setIsLocked(false);
         }, 1000);
       }
     }
+    setMoves((prev) => prev + 1);
   };
 
   return (
     <div className="app">
-      <GameHeader score={0} moves={0} />
+      <GameHeader score={score} moves={moves} onReset={initializeGame} />
       <div className="cards-grid">
         {cards.map((card) => (
           <Card card={card} onClick={handleCardClick} />
