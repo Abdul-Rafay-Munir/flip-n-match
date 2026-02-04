@@ -1,7 +1,7 @@
 export const GameHeader = ({ score, moves, onReset }) => {
   return (
     <div className="game-header">
-      <h1>Flip n Match</h1>
+      <h1>FlipnMatch</h1>
       <div className="stats">
         <div className="stat-item">
           <span className="stat-label">Score:</span>
